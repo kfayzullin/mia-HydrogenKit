@@ -1,0 +1,8 @@
+Resource.swift
+	public init(path: String?, method: Method, params: [String: AnyObject]?, pathReplacements: [String: String]?, headers: [String: String]?, parse: NSData? -> A?)
+	public init(path: String?, method: Method, params: [String : AnyObject]?, pathReplacements: [String : String]?, parse: NSData? -> A?)
+	public init(path: String?, method: Method, params: [String : AnyObject]?, parse: NSData? -> A?)
+	public init(path: String?, method: Method, parse: NSData? -> A?)
+URLRequestBuilder.swift
+	public class URLRequestBuilder
+	public init() { }

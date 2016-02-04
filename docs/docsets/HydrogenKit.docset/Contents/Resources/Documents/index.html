@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HydrogenKit  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a title="HydrogenKit  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">HydrogenKit Docs</a> (81% documented)</p>
+        <p class="header-right"><a href="https://github.com/7factory/MIA-HydrogenKit"><img src="img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">HydrogenKit Reference</a>
+        <img id="carat" src="img/carat.png" />
+        HydrogenKit  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/Hydrogen.html">Hydrogen</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Task.html">Task</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/URLRequestBuilder.html">URLRequestBuilder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/Method.html">Method</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Result.html">Result</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/HydrogenKitError.html">HydrogenKitError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:V11HydrogenKit7Request">Request</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Resource.html">Resource</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <p><img src="https://github.com/SevenVenturesGmbH/SevenTV-Wiki/raw/master/images/framework_logos/hydrogen_400px.png?raw=true" alt="logo" title="Hydrogen Logo"></p>
+<a href='#mia_hydrogenkit' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='mia_hydrogenkit'>MIA-HydrogenKit</h1>
+
+<p>Swift networking library (wrapping NSURLSession).</p>
+<a href='#requirements' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='requirements'>Requirements</h2>
+
+<p>iOS &gt;= 8.0, Swift</p>
+<a href='#setup' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='setup'>Setup</h2>
+
+<p>Add HydrogenKit to your Podfile.
+<code>ruby 
+pod &quot;HydrogenKit&quot;, &quot;~&gt; 2.0&quot;
+</code>
+Run <code>pod install</code>.</p>
+<a href='#general_usage' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='general_usage'>General Usage</h2>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">hydrogen</span> <span class="o">=</span> <span class="kt">Hydrogen</span><span class="p">()</span>
+
+<span class="k">let</span> <span class="nv">resource</span> <span class="o">=</span> <span class="kt">Resource</span><span class="p">(</span>
+  <span class="nv">path</span><span class="p">:</span> <span class="s">"get"</span><span class="p">,</span>
+  <span class="nv">method</span><span class="p">:</span> <span class="kt">Method</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span>
+  <span class="nv">parse</span><span class="p">:</span> <span class="p">{</span> <span class="n">data</span> <span class="k">in</span>
+      <span class="c1">// perform standard JSON decoding using NSJSONSerialization here</span>
+      <span class="k">return</span> <span class="s">"Hello World"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="k">let</span> <span class="nv">task</span> <span class="o">=</span> <span class="n">hydrogen</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+  <span class="kt">NSURL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"http://httpbin.org"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+  <span class="nv">resource</span><span class="p">:</span> <span class="n">resource</span><span class="p">,</span>
+  <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+      <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="kd">let</span> <span class="o">.</span><span class="kt">Success</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">statusCode</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">statusCode</span><span class="p">)</span>
+      <span class="k">case</span> <span class="kd">let</span> <span class="o">.</span><span class="kt">Error</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">task</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+</code></pre>
+
+<p>The snippet above uses four main steps to perform a network call:
+- An instance of hydrogen is created. <strong>Note:</strong> This instance should be strongly held in a property of your class.
+- A resource specifies the path, HTTP method, and a closure that receives an <code>NSData</code> instance and returns the parsed result. (For a REST endpoint responding with JSON, the <code>NSData</code> could be converted to JSON here.) 
+- Hydrogen&rsquo;s request method is called with the base path, the previously configured resource, and a completion closure. The completion closure receives an associated enum that is either <code>.Success</code> or <code>.Error</code>. In the success case, the first associated value contains the result that was returned from the <code>parse</code> function of the resource (i.e., <q>Hello World</q>). <strong>Note:</strong> You need to dispatch to the main queue here if you want to update the UI.
+- The task is resumed, which starts the network call.</p>
+<a href='#configuration' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='configuration'>Configuration</h3>
+
+<p>Hydrogen can be configured with three (optional) parameters in its initializer:
+- <code>config</code>: An <code>NSURLSessionConfiguration</code> object. Default is <code>NSURLSessionConfiguration.defaultSessionConfiguration()</code>.
+- <code>urlRequestBuilder</code>: A URLRequestBuilder object that returns configured <code>NSURLRequest</code> objects. Default is an instance of Hydrogen&rsquo;s <code>URLRequestBuilder</code> class. (TODO: URLRequestBuilder should be a protocol.)
+- <code>acceptableStatusCodes</code>: A Swift Range specifying the HTTP status codes that are considered as success. Default is <code>200..&lt;300</code>. </p>
+<a href='#performing_requests' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='performing_requests'>Performing Requests</h3>
+
+<p>The <code>request</code> method has three different signatures:
+- <code>baseURL: NSURL, resource: Resource&lt;A&gt;, completion: Result&lt;A&gt; -&gt; Void</code>: Used in the example above.
+- <code>baseURL: NSURL, resource: Resource&lt;A&gt;, modifyRequest: (NSMutableURLRequest -&gt; Void)?, completion: Result&lt;A&gt; -&gt; Void</code>: Takes an additional closure that may modify the <code>NSMutableURLRequest</code> object before the request is started. (This closure runs on a background queue.) 
+- <code>baseURL: NSURL, request: Request&lt;A&gt;</code>: Can be used to retry a failed request in the completion closure.</p>
+<a href='#cancelling_requests' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='cancelling_requests'>Cancelling Requests</h3>
+
+<p>You can either call <code>cancel</code> on a <code>Task</code> returned from the request method or call <code>cancelAll</code> to stop all calls of a Hydrogen instance.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="https://github.com/7factory" target="_blank" rel="external">ProSiebenSat1Digital GmbH</a>. All rights reserved. (Last updated: 2016-02-04)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.5.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
