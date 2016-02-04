@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>MIA-Hydrogenkit by 7factory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">MIA-Hydrogenkit</h1>
+      <h2 class="project-tagline">A Swift NSURLSession wrapper</h2>
+      <a href="https://github.com/7factory/MIA-HydrogenKit" class="btn">View on GitHub</a>
+      <a href="https://github.com/7factory/MIA-HydrogenKit/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/7factory/MIA-HydrogenKit/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="https://github.com/SevenVenturesGmbH/SevenTV-Wiki/raw/master/images/framework_logos/hydrogen_400px.png?raw=true" alt="logo" title="Hydrogen Logo"></p>
+
+<h1>
+<a id="mia-hydrogenkit" class="anchor" href="#mia-hydrogenkit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MIA-HydrogenKit</h1>
+
+<p>Swift networking library (wrapping NSURLSession).</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>iOS &gt;= 8.0, Swift</p>
+
+<h2>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h2>
+
+<p>Add HydrogenKit to your Podfile.</p>
+
+<div class="highlight highlight-source-ruby"><pre>pod <span class="pl-s"><span class="pl-pds">"</span>HydrogenKit<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>~&gt; 2.0<span class="pl-pds">"</span></span></pre></div>
+
+<p>Run <code>pod install</code>.</p>
+
+<h2>
+<a id="general-usage" class="anchor" href="#general-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Usage</h2>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> hydrogen <span class="pl-k">=</span> Hydrogen()
+
+<span class="pl-k">let</span> resource <span class="pl-k">=</span> Resource(
+  path: <span class="pl-s"><span class="pl-pds">"</span>get<span class="pl-pds">"</span></span>,
+  method: Method<span class="pl-k">.</span>GET,
+  parse: { data <span class="pl-k">in</span>
+      <span class="pl-c">// perform standard JSON decoding using NSJSONSerialization here</span>
+      <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span>
+  }
+)
+
+<span class="pl-k">let</span> task <span class="pl-k">=</span> hydrogen<span class="pl-k">.</span>request(
+  NSURL(string: <span class="pl-s"><span class="pl-pds">"</span>http://httpbin.org<span class="pl-pds">"</span></span>)<span class="pl-k">!</span>,
+  resource: resource,
+  completion: { result <span class="pl-k">in</span>
+      <span class="pl-k">switch</span> result {
+      <span class="pl-k">case</span> <span class="pl-k">let</span> <span class="pl-k">.</span>Success(value, request, statusCode):
+        <span class="pl-c1">print</span>(value, request, statusCode)
+      <span class="pl-k">case</span> <span class="pl-k">let</span> <span class="pl-k">.</span>Error(error, request):
+        <span class="pl-c1">print</span>(error, request)
+      }
+  }
+)
+task<span class="pl-k">.</span>resume()</pre></div>
+
+<p>The snippet above uses four main steps to perform a network call:</p>
+
+<ul>
+<li>An instance of hydrogen is created. <strong>Note:</strong> This instance should be strongly held in a property of your class.</li>
+<li>A resource specifies the path, HTTP method, and a closure that receives an <code>NSData</code> instance and returns the parsed result. (For a REST endpoint responding with JSON, the <code>NSData</code> could be converted to JSON here.) </li>
+<li>Hydrogen's request method is called with the base path, the previously configured resource, and a completion closure. The completion closure receives an associated enum that is either <code>.Success</code> or <code>.Error</code>. In the success case, the first associated value contains the result that was returned from the <code>parse</code> function of the resource (i.e., "Hello World"). <strong>Note:</strong> You need to dispatch to the main queue here if you want to update the UI.</li>
+<li>The task is resumed, which starts the network call.</li>
+</ul>
+
+<h3>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>Hydrogen can be configured with three (optional) parameters in its initializer:</p>
+
+<ul>
+<li>
+<code>config</code>: An <code>NSURLSessionConfiguration</code> object. Default is <code>NSURLSessionConfiguration.defaultSessionConfiguration()</code>.</li>
+<li>
+<code>urlRequestBuilder</code>: A URLRequestBuilder object that returns configured <code>NSURLRequest</code> objects. Default is an instance of Hydrogen's <code>URLRequestBuilder</code> class. (TODO: URLRequestBuilder should be a protocol.)</li>
+<li>
+<code>acceptableStatusCodes</code>: A Swift Range specifying the HTTP status codes that are considered as success. Default is <code>200..&lt;300</code>. </li>
+</ul>
+
+<h3>
+<a id="performing-requests" class="anchor" href="#performing-requests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Performing Requests</h3>
+
+<p>The <code>request</code> method has three different signatures:</p>
+
+<ul>
+<li>
+<code>baseURL: NSURL, resource: Resource&lt;A&gt;, completion: Result&lt;A&gt; -&gt; Void</code>: Used in the example above.</li>
+<li>
+<code>baseURL: NSURL, resource: Resource&lt;A&gt;, modifyRequest: (NSMutableURLRequest -&gt; Void)?, completion: Result&lt;A&gt; -&gt; Void</code>: Takes an additional closure that may modify the <code>NSMutableURLRequest</code> object before the request is started. (This closure runs on a background queue.) </li>
+<li>
+<code>baseURL: NSURL, request: Request&lt;A&gt;</code>: Can be used to retry a failed request in the completion closure.</li>
+</ul>
+
+<h3>
+<a id="cancelling-requests" class="anchor" href="#cancelling-requests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Cancelling Requests</h3>
+
+<p>You can either call <code>cancel</code> on a <code>Task</code> returned from the request method or call <code>cancelAll</code> to stop all calls of a Hydrogen instance.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/7factory/MIA-HydrogenKit">MIA-Hydrogenkit</a> is maintained by <a href="https://github.com/7factory">7factory</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
