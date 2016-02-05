@@ -1,4 +1,4 @@
-![logo](https://raw.githubusercontent.com/7factory/mia-HydrogenKit/gh-pages/images/krypton_400px.png "Hydrogen Logo")
+![logo](https://raw.githubusercontent.com/7factory/mia-HydrogenKit/gh-pages/images/hydrogen_400px.png "Hydrogen Logo")
 
 # mia-HydrogenKit
 
